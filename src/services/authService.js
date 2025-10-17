@@ -19,10 +19,10 @@ exports.login = async (req, res) => {
             var separatedName = [];
             if (response.name.split(" ").length > 1) {
                 separatedName = response.name.split(" ");
-            }else{
+            } else {
                 separatedName.push(response.name);
             }
-            const username = separatedName.length > 1 ? separatedName[0] + " " + separatedName[separatedName.length - 1][0] +"." : separatedName[0];
+            const username = separatedName.length > 1 ? separatedName[0] + " " + separatedName[separatedName.length - 1][0] + "." : separatedName[0];
             const lastname = separatedName.length > 1 ? separatedName[separatedName.length - 1] : "";
             const token = jwt.sign({
                 uid: response.id,
@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
                 user_level: response.user_level,
                 when: now,
                 from: req.rawHeaders
-            }, SECRET, { expiresIn: "8h" });
+            }, SECRET, { expiresIn: "100ms" });
 
             return res.status(200).json(
                 {
@@ -53,8 +53,13 @@ exports.login = async (req, res) => {
 exports.info = async (req, res) => {
     const token = req.headers['x-token'];
 
-    decoded = jwt.decode(token);
+    decoded = jwt.verify(token, SECRET, ((err, decoded) => {
+        if (err) {
+            res.status(401).json(err)
+        } else {
+            return res.status(200).json(decoded);
+        }
+    }));
 
-    return res.status(200).json(decoded);
 
 }

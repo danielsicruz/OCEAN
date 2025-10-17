@@ -1,10 +1,46 @@
 const libraryController = require("../controllers/libraryController");
+const institutesUsersController = require("../controllers/institutesUsersController");
+const usersLibrariesController = require("../controllers/usersLibrariesController");
+const librariesInstitutesController = require("../controllers/librariesInstitutesController");
+const { Op } = require("sequelize");
 
 exports.create = async (req, res) => {
     data = req.body;
+    myInstitutes = await institutesUsersController.select({ InstituteId: { [Op.or]: data.myInstitutes } }, res);
+    data.id = null;
+    const sendInvitestoInstitutes = [];
+    const inscribedInstitutes = myInstitutes
+        .filter(ins => ins.userLevel >= 2 && ins.UserId === req.userData.uid)
+        .map(ins => ins.InstituteId);
+    data.inviteInstitutes.push(myInstitutes
+        .filter(ins => ins.userLevel < 2 && ins.UserId === req.userData.uid)
+        .map(ins => ins.InstituteId));
+
+    inviteInstitutes = await institutesUsersController.select({ InstituteId: { [Op.or]: data.inviteInstitutes }, userLevel: { [Op.gt]: 2 } }, res);
+
+
+    sendInvitestoInstitutes.push(...inviteInstitutes.map(ins => ins));
+
+    
     if (true) {
-        library = await libraryController.create(data);
-        return res.status(201).json(library);
+        const library = await libraryController.create(data);
+        const libraryId = library.id || library.dataValues?.id;
+        const libraryInstitutes = await librariesInstitutesController.bulkCreate(inscribedInstitutes.map(ins => {
+            return {
+                LibraryId: libraryId,
+                InstituteId: ins,
+                userLevel: 4,
+            }
+        }));
+        const userLibrary = await usersLibrariesController.create({
+            UserId: req.userData.uid,
+            LibraryId: libraryId,
+            userLevel: 4,
+        });
+        console.log(libraryId)
+        const response = {"library": library, "userLibrary":userLibrary ,"institutes": libraryInstitutes, "peindingInstitutes": sendInvitestoInstitutes};
+
+        return res.status(201).json(response);
     } else {
         return res.status(401).json({ 'message': 'Unauthorized' });
     }

@@ -36,7 +36,7 @@ const contactWay = ['email', 'phone', 'whatsapp', 'telegram', 'linkedin', 'insta
             const email = faker.internet.email();
             users.push(await User.create({
                 name: name,
-                email: faker.internet.email({ firstName: name.split(" ")[0], lastName: name.split(" ")[name.split(" ").length - 1] }),
+                email: faker.internet.email({ firstName: name.split(" ")[0].toLowerCase(), lastName: name.split(" ")[name.split(" ").length - 1].toLowerCase() }),
                 password: faker.internet.password(),
                 userLevel: faker.number.int({ min: 1, max: 3 })
             }));
@@ -77,7 +77,7 @@ const contactWay = ['email', 'phone', 'whatsapp', 'telegram', 'linkedin', 'insta
                 state: faker.location.state(),
                 country: faker.location.country(),
                 private: faker.number.int({ min: 0, max: 1 }),
-                imagePath: faker.image.urlPicsumPhotos()
+                imagePath: faker.image.urlPicsumPhotos({width:600, height:320, category:'museum', blur:0})
             }));
         }
 
@@ -127,7 +127,7 @@ const contactWay = ['email', 'phone', 'whatsapp', 'telegram', 'linkedin', 'insta
                 vid: faker.helpers.fromRegExp(/[0-9]{4}-[A-Za-z0-9]{6}-[0-9]{2}/),
                 name: faker.commerce.productName(),
                 description: faker.lorem.paragraph(),
-                imagePath: faker.image.urlPicsumPhotos(),
+                imagePath: faker.image.urlPicsumPhotos({width:300, height:300, category:'archaeology', blur:0}),
                 foundPlace: faker.location.city(),
                 age: `${faker.number.int({ min: 500, max: 2000 })} anos`,
                 historicalContext: faker.lorem.sentence(),

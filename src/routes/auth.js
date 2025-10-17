@@ -2,7 +2,6 @@ const express = require("express");
 const {authByUserLevel} = require("./middlewares");
 const { route } = require("express/lib/application");
 const jwt = require('jsonwebtoken');
-const SECRET = process.env.JWTTOKEN;
 
 let router = express.Router();
 

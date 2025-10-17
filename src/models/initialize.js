@@ -59,7 +59,6 @@ User.hasMany(UsersContacts);
 UsersContacts.belongsTo(User);
 Contact.hasMany(UsersContacts);
 UsersContacts.belongsTo(Contact);
-
 // db.sync({ alter: true})
 //     .then(() => {
 //         console.log("All models were synchronized successfully.");

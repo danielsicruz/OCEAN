@@ -54,20 +54,9 @@ exports.update = async (data) => {
     const tochange = await User.findByPk(data.id);
 
     tochange.name = data.name ? data.name : tochange.name;
-    tochange.description = data.description ? data.description : tochange.description;
-    tochange.imagePath = data.imagePath ? data.imagePath : tochange.imagePath;
-    tochange.foundPlace = data.foundPlace ? data.foundPlace : tochange.foundPlace;
-    tochange.age = data.age ? data.age : tochange.age;
-    tochange.historicalContext = data.historicalContext ? data.historicalContext : tochange.historicalContext;
-    tochange.whoFound = data.whoFound ? data.whoFound : tochange.whoFound;
-    tochange.coordinates = data.coordinates ? data.coordinates : tochange.coordinates;
-    tochange.dimensions = data.dimensions ? data.dimensions : tochange.dimensions;
-    tochange.weight = data.weight ? data.weight : tochange.weight;
-    tochange.texture = data.texture ? data.texture : tochange.texture;
-    tochange.materialComposition = data.materialComposition ? data.materialComposition : tochange.materialComposition;
-    tochange.historicalPeople = data.historicalPeople ? data.historicalPeople : tochange.historicalPeople;
-    tochange.origin_or_utility = data.origin_or_utility ? data.origin_or_utility : tochange.origin_or_utility;
-    tochange.socialRelevance = data.socialRelevance ? data.socialRelevance : tochange.socialRelevance;
+    tochange.password = data.password ? data.password : tochange.password;
+    tochange.email = data.email ? data.email : tochange.email;
+    tochange.userLevel = data.userLevel ? data.userLevel : tochange.userLevel;
 
     response = await tochange.save();
     return response;

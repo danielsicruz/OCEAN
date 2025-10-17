@@ -6,6 +6,7 @@ const Library = database.define('Library',{
         type:Sequelize.STRING,
         allowNull: false,
         primaryKey: true,
+        defaultValue: Sequelize.UUIDV4
     },
     vid:{
         type:Sequelize.STRING,

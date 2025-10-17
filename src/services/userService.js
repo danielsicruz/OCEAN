@@ -23,7 +23,7 @@ exports.select = async (req, res) => {
     if (data != undefined) {
         filter = {
             name: data.name ? data.name : null,
-            password: data.password ? data.password : null,
+            //password: data.password ? data.password : null,
             email: data.email ? data.email : null,
             userLevel: data.userLevel ? data.userLevel : null,
             created_at: data.created_at ? data.created_at : null,
@@ -76,6 +76,7 @@ exports.getOne = async (req, res) => {
 exports.update = async (req, res) => {
     data = req.body;
     data.id = req.params.id;
+    data.password = await bcrypt.hash(data.password, 8);
     //rules
     if (true) {
         user = await userController.update(data);

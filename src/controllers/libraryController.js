@@ -5,17 +5,20 @@ const ArtifactsLibraries = require("../models/mArtifactsLibraries")
 const Institute = require("../models/mInstitute");
 const Artifact = require('../models/mArtifact');
 const Contact = require('../models/mContact');
+const InstitutesUsers = require('../models/mInstitutesUsers');
 const { Op } = require("sequelize");
 
 
 exports.create = async (data) => {
     response = await Library.create({
-        id: data.id,
         name: data.name,
         city: data.city,
+        state: data.state,
+        vid: data.vid,
         country: data.country,
         imagePath: data.imagePath,
         private: data.private,
+        description: data.description,
 
     });
     return response;
@@ -65,11 +68,12 @@ exports.selectByUser = async (UserId, res) => {
                     model: UsersLibraries,
                     where: { UserId: UserId },
                 },
-                
+
             ],
 
         });
-        const results = await Promise.all(
+
+        const librariesWithArtifacts = await Promise.all(
             libraries.map(async lib => {
                 const artifactsCount = await ArtifactsLibraries.count({
                     where: { LibraryId: lib.id }
@@ -77,7 +81,22 @@ exports.selectByUser = async (UserId, res) => {
                 return { ...lib.toJSON(), artifactsCount };
             })
         );
-
+        const institutes = await Institute.findAll({
+            include: [{ model: InstitutesUsers, where: { UserId: UserId } }],
+        });
+        const inviteInstitutes = await Institute.findAll({
+            include: [
+                {
+                    model: InstitutesUsers,
+                    required: false, // faz LEFT JOIN
+                    where: { UserId } // tenta achar esse usuário
+                }
+            ],
+            where: {
+                '$InstitutesUsers.UserId$': null // pega só os que não tem
+            }
+        });
+        const results = { "myInstitutes": institutes, "libraries": librariesWithArtifacts, "inviteInstitutes": inviteInstitutes };
         return results;
     } catch (error) {
         console.error("Erro ao buscar bibliotecas:", error);
@@ -99,8 +118,11 @@ exports.update = async (data) => {
     tochange.name = data.name ? data.name : tochange.name;
     tochange.country = data.country ? data.country : tochange.country;
     tochange.private = data.private ? data.private : tochange.private;
+    tochange.state = data.state ? data.state : tochange.state;
+    tochange.vid = data.vid ? data.vid : tochange.vid;
     tochange.city = data.city ? data.city : tochange.city;
     tochange.imagePath = data.imagePath ? data.imagePath : tochange.imagePath;
+    tochange.description = data.description ? data.description : tochange.description;
 
     response = await tochange.save();
     return response;

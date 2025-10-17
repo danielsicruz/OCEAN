@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/", upload.single('image'), libraryService.create);
+router.post("/", checkUserData(), libraryService.create);
 router.get("/", libraryService.select);
 router.get("/myLibraries", checkUserData() ,libraryService.selectByUser);
 router.get("/:id", libraryService.getOne);
