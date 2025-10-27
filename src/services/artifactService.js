@@ -3,6 +3,16 @@ const artifactController = require("../controllers/artifactController");
 exports.create = async (req, res) => {
     data = req.body;
     if (true) {
+        tags = data.tags;
+
+        for (let i = 0; i < tags.length; i++) {
+            tags[i] = tags[i].toLowerCase();
+        }
+        existentTags = await artifactController.select(tags);
+        newTags = tags.filter(tag => !existentTags.includes(tag));
+
+        await artifactController.bulkCreate(newTags);
+
         artifact = await artifactController.create(data);
         return res.status(201).json(artifact);
     } else {

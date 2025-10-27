@@ -26,7 +26,7 @@ const contactWay = ['email', 'phone', 'whatsapp', 'telegram', 'linkedin', 'insta
     try {
         console.log('🧹 Limpando tabelas...');
         await db.sync({ force: true }); // limpa e recria tudo
-
+/*
         // ---------- USERS ----------
         console.log('👤 Criando usuários...');
         const users = [];
@@ -196,7 +196,7 @@ const contactWay = ['email', 'phone', 'whatsapp', 'telegram', 'linkedin', 'insta
         }
 
 
-
+*/
         console.log('✅ População de dados concluída com sucesso!');
         process.exit(0);
     } catch (error) {

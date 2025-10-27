@@ -11,6 +11,8 @@ const Contact = require('./mContact');
 const InstitutesContacts = require('./mInstitutesContacts');
 const UsersContacts = require('./mUsersContacts');
 const InstitutesUsers = require('./mInstitutesUsers');
+const Tags = require('./mTag');
+const ArtifactsTags = require('./mArtifactsTags');
 
 //Relations between users and institutes
 User.belongsToMany(Institute, { through: InstitutesUsers,  });
@@ -59,6 +61,15 @@ User.hasMany(UsersContacts);
 UsersContacts.belongsTo(User);
 Contact.hasMany(UsersContacts);
 UsersContacts.belongsTo(Contact);
+
+Artifact.belongsToMany(Tags, { through: ArtifactsTags, foreignKey: 'idArtifact' });
+Tags.belongsToMany(Artifact, { through: ArtifactsTags, foreignKey: 'idTags' });
+Artifact.hasMany(ArtifactsTags);
+ArtifactsTags.belongsTo(Artifact);
+Tags.hasMany(ArtifactsTags);
+ArtifactsTags.belongsTo(Tags);
+
+
 // db.sync({ alter: true})
 //     .then(() => {
 //         console.log("All models were synchronized successfully.");

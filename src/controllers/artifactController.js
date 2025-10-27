@@ -38,16 +38,7 @@ exports.select = async (filters = null, res) => {
     let response;
     if (filters == null) {
 
-        response = await Artifact.findAll(
-            {
-                include: [{ model: Library }],
-                attributes: {
-                    include: [
-                        [sequelize.col('Libraries.country'), 'country'],
-                    ]
-                },
-            }
-        );
+        response = await Artifact.findAll();
         return response;
     } else {
         //separate the filters here
@@ -55,6 +46,24 @@ exports.select = async (filters = null, res) => {
 
         response = await Artifact.findAll({
             where: filters
+        });
+        return response;
+    }
+
+}
+
+exports.checkTags = async (filters = null) => {
+    let response;
+    if (filters == null) {
+
+        response = await Artifact.findAll();
+        return response;
+    } else {
+        //separate the filters here
+        //We can build the filter out of the function and just put in findAll later
+
+        response = await Artifact.findAll({
+            name: {[sequelize.Op.or]: filters}
         });
         return response;
     }
