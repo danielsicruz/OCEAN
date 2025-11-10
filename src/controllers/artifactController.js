@@ -9,7 +9,6 @@ const Contact = require("../models/mContact");
 
 exports.create = async (data) => {
     response = await Artifact.create({
-        id: data.id,
         name: data.name,
         description: data.description,
         imagePath: data.imagePath,
