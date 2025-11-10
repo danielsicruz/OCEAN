@@ -56,6 +56,9 @@ const Artifact = database.define('Artifact',{
     },
     socialRelevance: {
         type:Sequelize.TEXT
+ },
+    tags: {
+        type:Sequelize.STRING
     },
     foundDate: {
         type:Sequelize.DATE

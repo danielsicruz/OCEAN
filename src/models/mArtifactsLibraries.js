@@ -15,6 +15,9 @@ const ArtifactsLibraries = database.define('ArtifactsLibraries',{
     LibraryId:{
         type:Sequelize.UUID,
         
+    },
+    ArtifactTags:{
+        type:Sequelize.STRING,
     }
 }, {paranoid: true, tableName: 'ArtifactsLibraries'})
 module.exports = ArtifactsLibraries;

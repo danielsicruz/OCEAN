@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { ar } = require("@faker-js/faker");
 const Artifact = require("../models/mArtifact")
 const Library = require("../models/mLibrary");
@@ -25,6 +26,10 @@ exports.create = async (data) => {
         origin_or_utility: data.origin_or_utility,
         socialRelevance: data.socialRelevance,
     });
+    relationship = await ArtifactsLibraries.create({
+        ArtifactId:response.id,
+        LibraryId:data.library
+    })
     return response;
 }
 
@@ -47,6 +52,8 @@ exports.select = async (filters = null, res) => {
             where: filters
         });
         return response;
+
+
     }
 
 }
@@ -58,11 +65,11 @@ exports.checkTags = async (filters = null) => {
         response = await Artifact.findAll();
         return response;
     } else {
-        //separate the filters here
-        //We can build the filter out of the function and just put in findAll later
+        //Separar os filtros aqui
+        //Nós podemos construir os filtros fora da função e apenas colocar no findall depois
 
         response = await Artifact.findAll({
-            name: {[sequelize.Op.or]: filters}
+            name: { [sequelize.Op.or]: filters }
         });
         return response;
     }
@@ -76,17 +83,20 @@ exports.selectOne = async (filters = null, res) => {
             {
                 model: Library,
                 include: [
-                    { model: Institute, include:[{model: Contact}] },
-                    
+                    { model: Institute, include: [{ model: Contact }] },
+
                 ]
             },
             {
+
                 model: ArtifactsLibraries,
-                
+
                 attributes: [include = [
                     sequelize.fn('COUNT', sequelize.col('ArtifactsLibraries.LibraryId')),
                     'artifactsCount',
+
                 ]]
+
             }
         ]
     });
@@ -119,7 +129,16 @@ exports.update = async (data) => {
 exports.delete = async (data, res) => {
     return Artifact.destroy({
         where: {
-            id: data.id
+            id: { [Op.or]: data }
         }
     });
+}
+
+exports.selectToDelete = async (data, res) => {
+    console.log(data)
+    result = await ArtifactsLibraries.findAll({
+        where: { LibraryId: data },
+        //include: [{ model: Artifact }]        
+    });
+    return result;
 }

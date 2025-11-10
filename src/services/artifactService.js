@@ -3,7 +3,7 @@ const artifactController = require("../controllers/artifactController");
 exports.create = async (req, res) => {
     data = req.body;
     if (true) {
-        tags = data.tags;
+     /*   tags = data.tags;
 
         for (let i = 0; i < tags.length; i++) {
             tags[i] = tags[i].toLowerCase();
@@ -12,8 +12,11 @@ exports.create = async (req, res) => {
         newTags = tags.filter(tag => !existentTags.includes(tag));
 
         await artifactController.bulkCreate(newTags);
-
+*/
+        console.log(data);
+        data.id = null; //To auto increment
         artifact = await artifactController.create(data);
+        
         return res.status(201).json(artifact);
     } else {
         return res.status(401).json({ 'message': 'Unauthorized' });

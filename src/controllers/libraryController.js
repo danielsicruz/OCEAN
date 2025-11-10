@@ -112,6 +112,14 @@ exports.selectOne = async (filters = null, res) => {
     return response;
 }
 
+exports.selectToDelete = async (filters ={}, res) => {
+    response = await Library.findOne({
+        where: filters,
+        include:[{model:ArtifactsLibraries}, {model:Artifact}]
+    });
+    return response;
+}
+
 exports.update = async (data) => {
     const tochange = await Library.findByPk(data.id);
 
@@ -131,7 +139,7 @@ exports.update = async (data) => {
 exports.delete = async (data, res) => {
     return Library.destroy({
         where: {
-            id: data.id
+            id: data
         }
     });
 }

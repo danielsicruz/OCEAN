@@ -2,6 +2,7 @@ const libraryController = require("../controllers/libraryController");
 const institutesUsersController = require("../controllers/institutesUsersController");
 const usersLibrariesController = require("../controllers/usersLibrariesController");
 const librariesInstitutesController = require("../controllers/librariesInstitutesController");
+const artifactController = require("../controllers/artifactController")
 const { Op } = require("sequelize");
 
 exports.create = async (req, res) => {
@@ -21,7 +22,7 @@ exports.create = async (req, res) => {
 
     sendInvitestoInstitutes.push(...inviteInstitutes.map(ins => ins));
 
-    
+
     if (true) {
         const library = await libraryController.create(data);
         const libraryId = library.id || library.dataValues?.id;
@@ -38,7 +39,7 @@ exports.create = async (req, res) => {
             userLevel: 4,
         });
         console.log(libraryId)
-        const response = {"library": library, "userLibrary":userLibrary ,"institutes": libraryInstitutes, "peindingInstitutes": sendInvitestoInstitutes};
+        const response = { "library": library, "userLibrary": userLibrary, "institutes": libraryInstitutes, "peindingInstitutes": sendInvitestoInstitutes };
 
         return res.status(201).json(response);
     } else {
@@ -126,9 +127,24 @@ exports.update = async (req, res) => {
     //rules
     if (true) {
         library = await libraryController.update(data);
+
         return res.status(200).json(library);
 
     } else {
         return res.status(401).json({ 'message': 'Unauthorized' });
     }
+}
+exports.delete = async (req, res) => {
+    const id = req.params.id
+    library = await libraryController.selectToDelete({ id: id });
+    artifacts = library.Artifacts;
+    const queryBuilder = [];
+    artifacts.map((artifact) => {
+        queryBuilder.push(artifact.id)
+    });
+    deletedArtifacts = await artifactController.delete(queryBuilder);
+    deletedLibrary = await libraryController.delete(id);
+    return res.status(201).json({ "deletedArtifacts": deletedArtifacts, "deletedLibrary": deletedLibrary });
+
+
 }

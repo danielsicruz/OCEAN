@@ -21,6 +21,6 @@ router.get("/", libraryService.select);
 router.get("/myLibraries", checkUserData() ,libraryService.selectByUser);
 router.get("/:id", libraryService.getOne);
 router.put("/:id", libraryService.update);
-//srouter.delete("/:id", libraryService.delete)
+router.delete("/:id", libraryService.delete)
 
 module.exports = router;
